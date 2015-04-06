@@ -48,7 +48,7 @@ namespace ISFViewertestForm
                 byte[] bytes = new byte[fs.Length];
                 fs.Read(bytes, 0, (int)bytes.Length);
 
-                // Loading Ink from 
+                // Loading Ink
                 InkOverlay mInkOverlay = new InkOverlay();
                 mInkOverlay.Ink.Load(bytes);
                 fs.Write(bytes, 0, bytes.Length);
@@ -56,6 +56,7 @@ namespace ISFViewertestForm
                 // Saving Ink in GIF format inside a byte array;
                 byte[] gif = mInkOverlay.Ink.Save(PersistenceFormat.Gif);
                 fs.Write(gif, 0, gif.Length);
+                mInkOverlay.Dispose();
 
                 // Dialog box to save the converted GIF file to the desired location
                 SaveFileDialog saveFileDialog1 = new SaveFileDialog();
@@ -66,9 +67,9 @@ namespace ISFViewertestForm
                 // Writing bytes to the file
                 System.IO.File.WriteAllBytes(saveFileDialog1.FileName, gif);
 
-                //Print Done! when the processing is completed
+                // Print Done! when the processing is completed
                 label2.Text = "Done!";
-
+                fs.Dispose();
             }               
         }
 
@@ -96,8 +97,6 @@ namespace ISFViewertestForm
                     foreach (string file in Directory.EnumerateFiles(openFolderDialog1.SelectedPath, "*.isf"))
                     {
 
-                        //String myfilename = Path.GetFileName(file);
-
                         // Converting ISF file to stream fs
                         FileStream fs = new FileStream(file, FileMode.Open);
                         byte[] bytes = new byte[fs.Length];
@@ -111,14 +110,16 @@ namespace ISFViewertestForm
                         // Saving Ink in GIF format inside a byte array;
                         byte[] gif = mInkOverlay.Ink.Save(PersistenceFormat.Gif);
                         fs.Write(gif, 0, gif.Length);
+                        mInkOverlay.Dispose();
 
-                        //Saving files with the same name as ISF and location specified in the dialog box of destination folder
+                        // Saving files with the same name as ISF and location specified in the dialog box of destination folder
                         var tempfilenameandlocation = Path.Combine(saveFolderDialog1.SelectedPath, Path.GetFileNameWithoutExtension(file));
                         String ext = ".gif";
                         System.IO.File.WriteAllBytes(tempfilenameandlocation + ext, gif);
 
-                        //Print Done! when the processing is completed
+                        // Print Done! when the processing is completed
                         label2.Text = "Done!";
+                        fs.Dispose();
                     }
                 }              
             }
